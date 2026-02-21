@@ -1,0 +1,416 @@
+<div id="learning-dashboard-grp">
+<meta charset="UTF-8">
+<title>Learning Dashboard</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet" href="/css/style.css">
+
+<div id="dashboardRoot" data-user='<%- JSON.stringify(userInfo) %>'>
+
+<div class="container" id="main-content-lg">
+
+  <div class="header-bar">
+    <h1>
+      <i class="fa-solid fa-graduation-cap"></i>
+      Learning Dashboard 2026
+    </h1>
+
+    <div class="policy-btn" id="openPolicy">
+      <i class="fa-solid fa-circle-info"></i>
+      Learning Goal Policy
+    </div>
+  </div>
+
+  <div class="note">
+    <i class="fa-solid fa-triangle-exclamation"></i>
+    Note: Dashboard reflects learning goal completion only.
+  </div>
+
+  <!-- Tabs -->
+  <!-- <div class="tabs" id="tabsSection">
+    <div class="tab active" data-year="2025">
+      <i class="fa-solid fa-calendar-days"></i> 2025
+    </div>
+    <div class="tab" data-year="2026">
+      <i class="fa-solid fa-calendar-days"></i> 2026
+    </div>
+  </div> -->
+
+    <hr style="border: none;
+  height: 1.5px;
+  background-color: lightgray;  /* light grey */
+  margin: 24px 0;
+  border-radius: 1px;">
+    
+  <!-- Error -->
+ <div id="errorBox" style="
+    font-size: 16px;
+    min-height: 150px;
+    line-height: 1.4;
+    background-color: #fee2e2;
+    color: #991b1b;
+    padding: 20px 24px;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    font-weight: 600;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    box-shadow: 0 4px 8px rgba(153, 27, 27, 0.15);
+    max-width: 650px;
+    margin-left: auto;
+    margin-right: auto;
+    display: none;
+    align-items: center;
+    gap: 12px;
+">
+    <svg xmlns="http://www.w3.org/2000/svg" style="flex-shrink: 0;" width="24" height="24" fill="none" stroke="#991b1b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-circle">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="12" y1="8" x2="12" y2="12"></line>
+        <line x1="12" y1="16" x2="12" y2="16"></line>
+    </svg>
+    <div id="errorMessage">
+    </div>
+</div>
+
+  <!-- Learning Progress -->
+  <div class="section" id="learningProgressSection">
+    <!-- <div class="section-header">
+      <i class="fa-solid fa-list-check"></i>
+      Learning Goal Progress – <span id="activeYearText"></span>
+    </div> -->
+    <div class="section-header">
+      <i class="fa-solid fa-list-check"></i>
+      Learning Goal Progress – 2026</span>
+    </div>
+    
+    <div class="goal-cards">
+<% if (goalsForYear && goalsForYear.length > 0) { %>
+ 
+    <% goalsForYear.forEach(function(goal) { 
+        let status = 'pending';
+        if (goal.optional) status = 'waived';
+        else if (goal.isCompleted) status = 'completed';
+    %>
+ 
+      <div class="goal-card <%= status %>">
+<% if (status === 'waived') { %>
+<span class="waived-tag">Waived</span>
+<% } %>
+ 
+        <p><%= goal.title %></p>
+ 
+      </div>
+ 
+    <% }); %>
+ 
+  <% } else { %>
+ 
+    <div class="goal-card pending">
+<p>No learning goals available for 2026.</p>
+</div>
+ 
+  <% } %>
+</div>
+
+
+      <div class="legend-grp">
+    <span class="completed"><i class="fa-solid fa-circle-check"></i> Completed</span>
+    <span class="pending"><i class="fa-regular fa-clock"></i> Pending</span>
+    <span class="waived"><i class="fa-solid fa-ban"></i> Waived</span>
+  </div>
+  </div>
+
+  <!-- Rating Summary -->
+  <div class="section" id="ratingSummarySection">
+<div class="section-header">
+<i class="fa-solid fa-star"></i>
+    Learning Goals Rating Summary
+</div>
+ 
+  <div class="rating-card">
+ 
+    <!-- User Name -->
+<div class="user-name">
+<i class="fa-solid fa-user"></i>
+<span>
+<%= userDetails.firstName %> <%= userDetails.lastName %>
+</span>
+</div>
+ 
+    <!-- User Meta -->
+<div class="user-meta">
+<i class="fa-solid fa-id-badge"></i>
+<span>
+<%= userDetails.softwareLevel %> | <%= userDetails.designation %>
+</span>
+</div>
+
+<div class="rating-row">
+<div class="stars">
+<% for(let i = 1; i <= 5; i++) { %>
+<% if(i <= rating) { %>
+<i class="fa-solid fa-star text-warning"></i>
+<% } else { %>
+<i class="fa-regular fa-star text-muted"></i>
+<% } %>
+<% } %>
+</div>
+ 
+<div class="rating-number">
+<%= rating %> / 5
+</div>
+</div>
+ 
+<div class="rating-label">
+<% if(progressPercent >= 90) { %>
+        Outstanding Performance
+<% } else if(progressPercent >= 70) { %>
+        Strong Progress
+<% } else if(progressPercent >= 40) { %>
+        Developing
+<% } else { %>
+        Needs Improvement
+<% } %>
+</div>
+ 
+<div class="progress-label">
+<i class="fa-solid fa-chart-line"></i>
+      Learning Goal Progress
+</div>
+ 
+    <div class="progress">
+<div 
+  class="progress-fill"
+  style="width: <%= typeof progressPercent !== 'undefined' ? progressPercent : 0 %>%;">
+</div>
+</div>
+ 
+    <div class="progress-percent">
+<%= progressPercent %>%
+</div>
+ 
+  </div>
+</div>
+
+<div id="main-section">  
+<section class="complaince-section">
+  <h2>Compliance Trainings</h2>
+  <div class="grid" id="compliance-grid">
+    <% if (complianceTrainings.length === 0) { %>
+      <p>No compliance trainings available.</p>
+    <% } else { %>
+      <% complianceTrainings.forEach(ct => {
+        const statusClass = ct.status.toLowerCase().replace(/\s/g, '-');
+        if (['completed', 'in-progress'].includes(statusClass)) { %>
+          <a href="https://hexavarsity.csod.com/ui/lms-learning-details/app/curriculum/<%= ct.complianceId %>?isOnePlayer=true" target="_blank" class="card-link">
+            <div class="card">
+              <h3><%= ct.complianceName %></h3>
+              <div class="ribbon <%= statusClass %>"><%= ct.status.toUpperCase() %></div>
+            </div>
+          </a>
+      <% } }); %>
+    <% } %>
+  </div>
+</section>
+
+<% if (userDetails.jobstream && userDetails.jobstream.toUpperCase() === "TECH") { %>
+<section class="genai-section">
+  <h2>Gen AI Curriculum</h2>
+  <div class="grid" id="compliance-grid">
+    <% if (genaiTraining.length === 0) { %>
+      <p>No Gen AI trainings available.</p>
+    <% } else { %>
+      <% genaiTraining.forEach(ct => {
+        const statusClass = ct.status.toLowerCase().replace(/\s/g, '-');
+        if (['completed', 'in-progress'].includes(statusClass)) { %>
+          <a href="https://hexavarsity.csod.com/ui/lms-learning-details/app/curriculum/<%= ct.complianceId %>?isOnePlayer=true" target="_blank" class="card-link">
+            <div class="card">
+              <h3><%= ct.complianceName %></h3>
+              <div class="ribbon <%= statusClass %>"><%= ct.status.toUpperCase() %></div>
+            </div>
+          </a>
+      <% } }); %>
+    <% } %>
+  </div>
+</section>
+
+<section class="training-section" style="margin-bottom: 20px;">
+  <h2>TSR With External certification</h2>
+  <% if (!tsrData.certifications || tsrData.certifications.length === 0) { %>
+    <p>No certifications available.</p>
+  <% } else { %>
+    <div class="grid" style="grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px;">
+      <% tsrData.certifications.forEach(cert => { 
+        const displayStatus = (cert.Status === "Registered") ? "In Progress" : cert.Status;
+        const statusClass = displayStatus.toLowerCase().replace(/\s/g, '-');
+      %>
+        <div class="cards-container" style="max-width: 350px; border-radius: 0;">
+          <h3 class="section-header" style="margin: 0;"><%= tsrData.tsrTitle %></h3>
+          <div class="card" style="position: relative; border-top-left-radius: 0; border-top-right-radius: 0;">
+            <h4 style="margin: 0 0 8px 0; line-height: 1.2;"><%= cert.Title %></h4>
+            <div class="ribbon <%= statusClass %>">
+              <%= displayStatus.toUpperCase() %>
+            </div>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  <% } %>
+</section>
+<% } %>
+
+<section class="training-section">
+  <h2>ILT/VILT Sessions</h2>
+
+  <p><strong>Total Training Hours Completed:</strong> <%= totalHours.toFixed(2) %> hrs</p>
+
+  <div class="session-list">
+    <% 
+      // Helper function to convert "HHHH:MM:SS" time string to decimal hours
+      function timeToDecimalHours(timeStr) {
+        if (!timeStr) return 0;
+        const parts = timeStr.split(':');
+        if (parts.length !== 3) return 0;
+        const hours = parseInt(parts[0], 10);
+        const minutes = parseInt(parts[1], 10);
+        const seconds = parseInt(parts[2], 10);
+        if (isNaN(hours) || isNaN(minutes) || isNaN(seconds)) return 0;
+        return hours + (minutes / 60) + (seconds / 3600);
+      }
+    %>
+
+    <% if (completedTrainings.length === 0) { %>
+      <p>No completed session trainings found.</p>
+    <% } else { %>
+      <div class="grid" style="padding: 0;">
+        <% completedTrainings.forEach(session => {
+             const decimalHours = timeToDecimalHours(session.TrainingHours);
+             const displayStatus = (session.Status === "Registered") ? "In Progress" : session.Status;
+             const statusClass = displayStatus.toLowerCase().replace(/\s/g, '-');
+        %>
+          <div class="session-item card" style="position: relative;">
+            <h3 style="margin: 0;"><%= session.Title %></h3>
+            <p>
+              <strong>Duration:</strong> <%= decimalHours %> hour<%= decimalHours !== 1 ? 's' : '' %> <br>
+              <strong>Start Date:</strong> <%= new Date(session.StartDateTime).toLocaleString('en-GB', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: true
+              }) %> <br>
+              <strong>End Date:</strong> <%= new Date(session.EndDateTime).toLocaleString('en-GB', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: true
+              }) %>
+            </p>
+            <div class="ribbon <%= statusClass %>">
+              <%= displayStatus.toUpperCase() %>
+            </div>
+          </div>
+        <% }) %>
+      </div>
+    <% } %>
+  </div>
+</section>
+
+</div>
+
+</div>
+
+
+
+<!-- POLICY MODAL -->
+<div class="policy-overlay" id="policyOverlay">
+  <div class="policy-modal">
+    <div class="policy-header">
+      <h3>
+        <i class="fa-solid fa-scale-balanced"></i>
+        Learning Goal Policy – 2026
+      </h3>
+      <i class="fa-solid fa-xmark close-btn" id="closePolicy"></i>
+    </div>
+
+    <div class="policy-body">
+      <div class="policy-item">
+        <i class="fa-solid fa-bullseye blue"></i>
+        <div>
+          <b>Objective</b>
+          <p>All Regular employees up to <b>G13</b> must have Learning Goals with <b>20% PMS weightage</b>. Not applicable for Mavericks under MAP.</p>
+        </div>
+      </div>
+
+      <div class="policy-item">
+        <i class="fa-solid fa-location-dot green"></i>
+        <div>
+          <b>Location Eligibility</b>
+          <p>Offshore &amp; Nearshore: Mandatory<br>Onshore: Recommended &amp; encouraged</p>
+        </div>
+      </div>
+
+      <div class="policy-item">
+        <i class="fa-solid fa-calendar-days purple"></i>
+        <div>
+          <b>Completion Window</b>
+          <p>1st Jan 2026 – 31st Dec 2026</p>
+        </div>
+      </div>
+
+      <div class="policy-item">
+        <i class="fa-solid fa-laptop-code orange"></i>
+        <div>
+          <b>Definition of TECH</b>
+          <p>Technical roles, competencies, service lines or verticals</p>
+        </div>
+      </div>
+
+      <div class="policy-item">
+        <i class="fa-solid fa-users-gear teal"></i>
+        <div>
+          <b>Definition of Others</b>
+          <p>Marketing &amp; Support (G2–G13), TECH stream (G7–G13)</p>
+        </div>
+      </div>
+
+      <div class="policy-item">
+        <i class="fa-solid fa-arrow-up-right-dots red"></i>
+        <div>
+          <b>Grade Movement</b>
+          <p>Goals set at start of year remain applicable if promoted</p>
+        </div>
+      </div>
+
+      <div class="policy-item">
+        <i class="fa-solid fa-certificate gold"></i>
+        <div>
+          <b>Base TSR Certifications</b>
+          <p>Recommended, aligned TSRs may be pursued as per project</p>
+        </div>
+      </div>
+
+         <div class="policy-item">
+        <i class="fa-solid fa-file-lines teal"></i>
+        <div>
+          <b>Learning Goal SOP</b>
+          <p>For detailed guidelines and procedures, please refer to the <a href="https://hexawareonline.sharepoint.com/:x:/s/Hexavarsity/Media/IQDf3wuiVKvTSIyxcbT-CpcZAWbt5BDQnKnigH_DNaTdC1E?e=BV5aSL" target="_blank" rel="noopener noreferrer">Learning Goal SOP document</a>.</p>
+        </div>
+      </div>
+
+      <div class="policy-item">
+        <i class="fa-solid fa-info-circle gray"></i>
+        <div>
+          <p style="margin:0"><i><small>Definitions and procedures, including Base TSR certification and in-person learning hours criteria, are outlined in the SOP and subject to updates by Hexavarsity based on organizational needs.</small></i></p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+<script src="/js/dashboard.js"></script>
+</div>

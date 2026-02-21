@@ -1,0 +1,469 @@
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Segoe UI,Arial,sans-serif;
+  background:#f5f7fb;
+}
+.container { 
+  min-height:435px;
+  padding: 0px 16px; 
+}
+
+.legend-grp{
+  display:flex;
+  justify-content:center;
+  gap:20px;
+  padding-bottom:16px
+}
+.legend-grp span{
+  padding:6px 14px;
+  border-radius:8px;
+  font-size:13px;
+  font-weight:600
+}
+.legend-grp i{
+    margin-right:3px;
+}
+/* HEADER */
+.header-bar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+h1{
+  font-size:28px;
+  margin:0;
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+h1 i{color:#2563eb}
+
+.note{
+  color:#b91c1c;
+  font-size:14px;
+  margin:6px 0 16px;
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+
+/* POLICY BUTTON */
+.policy-btn{
+  background:rgb(7, 18, 94);
+  color:#fff;
+  padding:8px 16px;
+  border-radius:999px;
+  cursor:pointer;
+  font-size:14px;
+  font-weight:600;
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+.policy-btn i{color:#facc15}
+
+/* TABS */
+.tabs{display:flex;gap:12px;margin-bottom:12px}
+.tab{
+  padding:8px 20px;
+  border-radius:999px;
+  border:1px solid #d1d5db;
+  background:#fff;
+  cursor:pointer;
+  font-weight:600;
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+.tab i{color:#6b7280}
+.tab.active{
+  background:rgb(7, 18, 94);
+  color:#fff;
+  border-color:rgb(7, 18, 94)
+}
+.tab.active i{color:white}
+
+/* ERROR */
+/* #errorBox{
+  margin-top:100px;
+  display:none;
+  background:#fee2e2;
+  color:#991b1b;
+  padding:12px 16px;
+  border-radius:8px;
+  margin-bottom:16px;
+  font-weight:600
+} */
+
+/* SECTIONS */
+.section{
+  background:#fff;
+  border-radius:12px;
+  border:1px solid #e5e7eb;
+  margin-bottom:24px;
+}
+.section-header{
+  background:rgb(7, 18, 94);
+  color:#fff;
+  padding:12px;
+  text-align:center;
+  font-size:18px;
+  font-weight:600;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:10px;
+}
+
+/* GOALS */
+.goal-cards{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:16px;
+  padding:18px
+}
+.goal-card{
+  position:relative;
+  padding:16px 14px;
+  border-radius:10px;
+  text-align:center;
+  border-top:5px solid;
+  box-shadow:0 4px 10px rgba(0,0,0,.05)
+}
+.goal-card i{
+  font-size:22px;
+  margin-bottom:8px;
+}
+.goal-card p{
+  font-size:14px;
+  margin:6px 0 0;
+  min-height:38px
+}
+
+.completed{background:#ecfdf5;border-color:#22c55e}
+.completed i{color:#16a34a}
+
+.pending{background:#fff1f2;border-color:#ef4444}
+.pending i{color:#dc2626}
+
+.waived{background:#eef2ff;border-color:#6366f1}
+.waived i{color:#4f46e5}
+
+.waived-tag{
+  position:absolute;
+  top:8px;
+  right:10px;
+  font-size:11px;
+  font-weight:700;
+  color:#4338ca
+}
+
+.fa-graduation-cap,.fa-user,.fa-id-badge,.fa-chart-line{
+    color: rgb(7, 18, 94)
+}
+.fa-circle-info{
+    color: white !important
+}
+
+/* RATING */
+.rating-card{padding:22px}
+.user-name{
+  font-size:20px;
+  font-weight:700;
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+.user-name i{color:#2563eb}
+
+.user-meta{
+  margin-top: 5px;
+  font-size:13px;
+  color:#6b7280;
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+
+.rating-row{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-top:10px;
+}
+.stars{font-size:20px}
+.stars span{color:#d1d5db}
+.stars .filled{color:#f5b301}
+
+.rating-number{
+  font-weight:700;
+  font-size:16px;
+}
+
+.rating-label{
+  font-size:13px;
+  font-weight:600;
+  color:#16a34a;
+  margin:6px 0;
+}
+
+.progress-label{
+  font-size:13px;
+  display:flex;
+  align-items:center;
+  gap:6px;
+  margin-top:10px;
+}
+
+.progress{
+  width:100%;
+  height:12px;
+  background:#e5e7eb;
+  border-radius:999px;
+  overflow:hidden
+}
+.progress-fill{
+  height:100%;
+  background:linear-gradient(90deg,#22c55e,#16a34a)
+}
+.progress-percent{
+  margin-top:6px;
+  font-size:13px;
+  font-weight:600;
+  text-align:right
+}
+
+/* POLICY MODAL */
+.policy-overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.55);
+  display:none;
+  justify-content:center;
+  align-items:center;
+  z-index:9999;
+}
+.policy-modal{
+  background:#fff;
+  width:600px;
+  max-width:95%;
+  border-radius:14px;
+  overflow:hidden;
+}
+.policy-header{
+  background:rgb(7, 18, 94);
+  color:#fff;
+  padding:14px 16px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+.policy-header h3{
+  color:white;   
+  margin:0;
+  font-size:18px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+.close-btn{cursor:pointer}
+
+.policy-body{padding:18px}
+.policy-item{
+  display:flex;
+  gap:14px;
+  margin-bottom:14px;
+}
+.policy-item i{
+ font-size: 18px;
+    margin-top: 4px;
+    width: 14px;
+}
+.policy-item p{margin:4px 0 0;font-size:13px;color:#374151}
+
+/* ICON COLORS */
+.blue { color:#2563eb }
+.green { color:#16a34a }
+.purple { color:#7c3aed }
+.orange { color:#ea580c }
+.teal { color:#0d9488 }
+.red { color:#dc2626 }
+.gold { color:#ca8a04 }
+
+/* HIDE CSOD ACTION WIDGET */
+#ctl00_ContentPlaceHolder1_widgetLayout_rptWidgets_ctl00_widgetContainer_ctl00_pnlActionItems,#ctl00_pnlBR{
+  display:none;
+}
+.just-display .goal-card{
+  border-color:grey !important;
+  background-color:#f5f5f5  !important;
+}
+body{
+  display: grid;
+    grid-template-rows: 1fr auto;
+    min-height: 100vh;
+    margin: 0;
+}
+
+.loader-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(255,255,255,0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+ 
+/* Loader Box */
+.loader-box {
+  text-align: center;
+}
+ 
+/* Spinner */
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 5px solid #e5e7eb;
+  border-top: 5px solid #2563eb;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin: auto;
+}
+ 
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+ 
+.loader-text {
+  margin-top: 12px;
+  font-weight: 600;
+  color: #374151;
+}
+
+
+.grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 28px;
+    }
+
+    /* Card style */
+    .card {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+      padding: 24px 22px;
+      position: relative;
+      transition: box-shadow 0.3s ease;
+      cursor: default;
+      overflow: visible;
+    }
+
+    .card:hover {
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    }
+
+    .card h3 {
+      margin: 0 0 14px 0;
+      font-weight: 600;
+      min-height: 50px;
+      font-size: 1.2rem;
+      color: #111827;
+      line-height: 1.3;
+       display: -webkit-box;
+  -webkit-line-clamp: 2; /* Limit to 2 lines */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  /* Optional for better wrapping */
+  white-space: normal;;
+    }
+    .card-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+    .complaince-section h2,.genai-section h2,.training-section h2 {
+      font-weight: 600;
+      font-size: 1.7rem;
+      margin: 40px 0 20px 0;
+      border-left: 4px solid rgb(7, 18, 94);
+      padding-left: 12px;
+      color: rgb(7, 18, 94);
+      user-select: none;
+    }
+    .ribbon {
+  position: static;        /* Remove absolute positioning */
+  display: inline-block;   /* Badge style */
+  padding: 6px 16px;
+  background: linear-gradient(135deg, #2563eb, #3b82f6);
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  border-radius: 20px;
+  box-shadow:
+    0 4px 8px rgba(59, 130, 246, 0.4),
+    inset 0 -2px 3px rgba(255, 255, 255, 0.3);
+  letter-spacing: 0.07em;
+  user-select: none;
+  margin-top: 8px;         /* Space from heading */
+  white-space: nowrap;
+}
+
+/* Variants */
+.ribbon.completed {
+  background: linear-gradient(135deg, #10b981, #047857);
+  box-shadow:
+    0 4px 8px rgba(4, 120, 87, 0.4),
+    inset 0 -2px 3px rgba(255, 255, 255, 0.3);
+}
+
+.ribbon.in-progress {
+  background: linear-gradient(135deg, #f59e0b, #b45309);
+  box-shadow:
+    0 4px 8px rgba(180, 83, 9, 0.4),
+    inset 0 -2px 3px rgba(255, 255, 255, 0.3);
+}
+
+/* Remove the after pseudo-element entirely */
+.ribbon::after {
+  content: none;
+}
+
+.ribbon.completed {
+  background: linear-gradient(135deg, #10b981, #047857);
+  box-shadow:
+    0 4px 8px rgba(4, 120, 87, 0.4),
+    inset 0 -2px 3px rgba(255, 255, 255, 0.3);
+}
+
+.ribbon.completed::after {
+  border-left-color: #047857;
+}
+
+.ribbon.in-progress {
+  background: linear-gradient(135deg, #f59e0b, #b45309);
+  box-shadow:
+    0 4px 8px rgba(180, 83, 9, 0.4),
+    inset 0 -2px 3px rgba(255, 255, 255, 0.3);
+}
+
+.ribbon.in-progress::after {
+  border-left-color: #b45309;
+}
+    /* Completion date placeholder */
+    .completion-date {
+      margin-top: 16px;
+      font-size: 0.9rem;
+      color: #6b7280;
+      font-style: italic;
+      display: none; /* Show later when date is added */
+    }
+
+  .session-item::marker{
+    text-decoration: none;
+  }
