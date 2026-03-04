@@ -7,14 +7,12 @@
 
 <div id="dashboardRoot" data-user='<%- JSON.stringify(userInfo) %>'>
 
-<div class="container" id="main-content-lg">
-
+<div class="container" >
   <div class="header-bar">
     <h1>
       <i class="fa-solid fa-graduation-cap"></i>
-      Learning Dashboard 2026
+      Learning Dashboard - <span class="activeYearText">2026</span>
     </h1>
-
     <div class="policy-btn" id="openPolicy">
       <i class="fa-solid fa-circle-info"></i>
       Learning Goal Policy
@@ -26,16 +24,16 @@
     Note: Dashboard reflects learning goal completion only.
   </div>
 
-  <!-- Tabs -->
-  <!-- <div class="tabs" id="tabsSection">
-    <div class="tab active" data-year="2025">
+ <div class="tabs" id="tabsSection">
+    <div class="tab" data-year="2025">
       <i class="fa-solid fa-calendar-days"></i> 2025
     </div>
-    <div class="tab" data-year="2026">
+     <div class="tab active" data-year="2026">
       <i class="fa-solid fa-calendar-days"></i> 2026
     </div>
-  </div> -->
+  </div>
 
+<div id="main-content-lg-2025" style="display: none;">
     <hr style="border: none;
   height: 1.5px;
   background-color: lightgray;  /* light grey */
@@ -73,6 +71,123 @@
 
   <!-- Learning Progress -->
   <div class="section" id="learningProgressSection">
+    <div class="section-header">
+      <i class="fa-solid fa-list-check"></i>
+      Learning Goal Progress – <span class="activeYearText"></span>
+    </div>
+    <div class="goal-cards" id="goalCards"></div>
+      <div class="legend-grp">
+    <span class="completed"><i class="fa-solid fa-circle-check"></i> Completed</span>
+    <span class="pending"><i class="fa-regular fa-clock"></i> Pending</span>
+    <span class="waived"><i class="fa-solid fa-ban"></i> Waived</span>
+  </div>
+  </div>
+
+  <!-- Rating Summary -->
+  <div class="section" id="ratingSummarySection">
+    <div class="section-header">
+      <i class="fa-solid fa-star"></i>
+      Learning Goals Rating Summary
+    </div>
+    <div class="rating-card">
+      <div class="user-name">
+        <i class="fa-solid fa-user"></i>
+        <span id="userName"></span>
+      </div>
+      <div class="user-meta">
+        <i class="fa-solid fa-id-badge"></i>
+        <span id="userMeta"></span>
+      </div>
+
+      <div class="rating-row">
+        <div class="stars" id="stars"></div>
+        <div class="rating-number" id="ratingNumber"></div>
+      </div>
+
+      <div class="rating-label" id="ratingLabel"></div>
+
+      <div class="progress-label">
+        <i class="fa-solid fa-chart-line"></i>
+        Learning Goal Progress
+      </div>
+
+      <div class="progress">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+      <div class="progress-percent" id="progressPercent"></div>
+    </div>
+  </div>
+</div>
+
+
+  
+<!-- <div class="container" id="main-content-lg-2026">
+
+  <div class="header-bar">
+    <h1>
+      <i class="fa-solid fa-graduation-cap"></i>
+      Learning Dashboard 2026
+    </h1>
+
+    <div class="policy-btn" id="openPolicy">
+      <i class="fa-solid fa-circle-info"></i>
+      Learning Goal Policy
+    </div>
+  </div>
+
+  <div class="note">
+    <i class="fa-solid fa-triangle-exclamation"></i>
+    Note: Dashboard reflects learning goal completion only.
+  </div>
+Tabs -->
+  <!-- 
+  <div class="tabs" id="tabsSection">
+    <div class="tab" data-year="2025">
+      <i class="fa-solid fa-calendar-days"></i> 2025
+    </div>
+     <div class="tab active" data-year="2026">
+      <i class="fa-solid fa-calendar-days"></i> 2026
+    </div>
+  </div> -->
+<div id="main-content-lg-2026">
+    <hr style="border: none;
+  height: 1.5px;
+  background-color: lightgray;  /* light grey */
+  margin: 24px 0;
+  border-radius: 1px;">
+    
+  <!-- Error -->
+ <div id="errorBox" style="
+    font-size: 16px;
+    min-height: 150px;
+    line-height: 1.4;
+    background-color: #fee2e2;
+    color: #991b1b;
+    padding: 20px 24px;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    font-weight: 600;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    box-shadow: 0 4px 8px rgba(153, 27, 27, 0.15);
+    max-width: 650px;
+    margin-left: auto;
+    margin-right: auto;
+    display: none;
+    align-items: center;
+    gap: 12px;
+">
+    <svg xmlns="http://www.w3.org/2000/svg" style="flex-shrink: 0;" width="24" height="24" fill="none" stroke="#991b1b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-circle">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="12" y1="8" x2="12" y2="12"></line>
+        <line x1="12" y1="16" x2="12" y2="16"></line>
+    </svg>
+    <div id="errorMessage">
+    </div>
+</div>
+
+
+  <!-- Learning Progress -->
+  <div class="section" id="learningProgressSection">
     <!-- <div class="section-header">
       <i class="fa-solid fa-list-check"></i>
       Learning Goal Progress – <span id="activeYearText"></span>
@@ -96,7 +211,10 @@
 <span class="waived-tag">Waived</span>
 <% } %>
  
-        <p><%= goal.title %></p>
+        <p style="margin-bottom: 10px;font-family: Roboto;font-size:16px;"><%= goal.title %></p>
+        <span style="    font-weight: bold;
+          font-size: 20px;
+          font-family: Roboto;"><%= goal.completion %> / <%= goal.count %> </span>
  
       </div>
  
@@ -120,34 +238,193 @@
   </div>
 
   <!-- Rating Summary -->
-  <div class="section" id="ratingSummarySection">
-<div class="section-header">
+  <%
+  /* ---------- SAFE DATA HANDLING ---------- */
+ 
+  const gradeNumber = userDetails.grade || "";
+  const jobstreamText = userDetails.jobstream || "";
+ 
+
+  const isTech = jobstreamText.toUpperCase().includes("TECH");
+ 
+  const learningCategory =
+    (gradeNumber >= 2 && gradeNumber <= 6 && isTech)
+      ? "TECH"
+      : "OTHERS";
+ 
+  const safeProgress = typeof progressPercent !== "undefined"
+    ? progressPercent
+    : 0;
+ 
+  const safeRating = typeof rating !== "undefined"
+    ? rating
+    : 0;
+%>
+ 
+<div id="ratingSummarySection">
+    <div class="rating-3col">
+
+  <!-- USER -->
+  <div class="col-card">
+    <div class="col-header">
+      <i class="fa-solid fa-user" style="color: white;"></i>
+      User Details
+    </div>
+    <div class="col-body" style="display:flex;flex-direction:column;justify-content:center;align-items:center">
+      <div class="user-name" id="userName">
+        <i class="fa-solid fa-user"></i>
+        <span>
+          <%= userDetails.firstName || '-' %> <%= userDetails.lastName || '' %>
+        </span>
+      </div>
+      <div class="user-meta" id="userMeta">
+        <i class="fa-solid fa-id-badge"></i>
+        <span>
+          <%= userDetails.softwareLevel || '-' %> | <%= userDetails.designation || '-' %>
+        </span>
+      </div>
+      <div class="user-meta" id="userMeta">
+        <i class="fa-solid fa-layer-group"></i>
+        <span>
+          Grade: G<%= gradeNumber || '-' %> | Job Stream: <%= jobstreamText || '-' %>
+        </span>
+      </div>
+ 
+    </div>
+  </div>
+
+  <!-- RATING -->
+  <div class="col-card">
+    <div class="col-header">
+      <i class="fa-solid fa-star"></i>
+      Rating
+    </div>
+    <div class="col-body center">
+      <div class="stars large" id="stars">
+        <% for(let i = 1; i <= 5; i++) { %>
+          <% if(i <= safeRating) { %>
+            <span class="filled">★</span>
+          <% } else { %>
+            <span>★</span>
+          <% } %>
+        <% } %>
+      </div>
+      <div class="rating-number large" id="ratingNumber"><%= safeRating %> / 5</div>
+      <div class="rating-label" id="ratingLabel">
+        <% if(safeProgress >= 100) { %>
+          Exceptional
+        <% } else if(safeProgress >= 75) { %>
+          Exceeds Expectation
+        <% } else if(safeProgress >= 50) { %>
+          Meets Expectation
+        <% } else if(safeProgress >= 25) { %>
+          Needs Improvement
+        <% } else { %>
+          Unsatisfactory
+        <% } %>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROGRESS -->
+  <div class="col-card">
+    <div class="col-header">
+      <i class="fa-solid fa-chart-line" style="color: white;"></i>
+      Learning Progress
+    </div>
+
+    <div class="col-body progress-col" style="justify-content: center;">
+      <div class="progress-visual">
+        <div class="circle-wrap small">
+          <div class="circle" id="progressCircle" style="background: conic-gradient(#22c55e <%= safeProgress * 3.6 %>deg, #e5e7eb 0deg);">
+            <div class="circle-inner">
+              <div class="circle-percent" id="circlePercent"><%= safeProgress %>%</div>
+              <div class="circle-label">Completed</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="display: flex;flex-direction: column;">
+           <div class="user-meta" id="userMeta">
+        <i class="fa-solid fa-graduation-cap"></i>
+        <span>
+          Learning Goal Category: <strong><%= learningCategory %></strong>
+        </span>
+      </div>
+           <!-- <div class="hint-text" style="margin-top: 10px;">
+          <i class="fa-solid fa-circle-info" style="color: gray !important;"></i>
+          Complete goals sequentially to boost rating
+        </div> -->
+        </div>
+
+      <!-- <div class="progress-details">
+        <div class="next-title">
+          <i class="fa-solid fa-flag-checkered"></i>
+          Next Required
+        </div>
+        <div class="next-required-text" id="nextRequiredText">
+          Advanced Gen AI Certification
+   
+        </div>
+        <div class="hint-text">
+          <i class="fa-solid fa-circle-info"></i>
+          Complete goals sequentially to boost rating
+        </div>
+      </div> -->
+    </div>
+
+    
+  </div>
+
+</div>
+  <!-- <div class="section-header">
 <i class="fa-solid fa-star"></i>
     Learning Goals Rating Summary
 </div>
  
   <div class="rating-card">
  
-    <!-- User Name -->
+  
 <div class="user-name">
 <i class="fa-solid fa-user"></i>
 <span>
-<%= userDetails.firstName %> <%= userDetails.lastName %>
+<%= userDetails.firstName || '-' %>
+<%= userDetails.lastName || '' %>
 </span>
 </div>
  
-    <!-- User Meta -->
+   
 <div class="user-meta">
 <i class="fa-solid fa-id-badge"></i>
 <span>
-<%= userDetails.softwareLevel %> | <%= userDetails.designation %>
+<%= userDetails.softwareLevel || '-' %> |
+<%= userDetails.designation || '-' %>
 </span>
 </div>
-
+ 
+<div class="user-meta">
+<i class="fa-solid fa-layer-group"></i>
+<span>
+        Grade: G<%= gradeNumber || '-' %> |
+        Job Stream: <%= jobstreamText || '-' %>
+</span>
+</div>
+ 
+   
+<div class="user-meta">
+<i class="fa-solid fa-graduation-cap"></i>
+<span>
+        Learning Goal Category:
+<strong><%= learningCategory %></strong>
+</span>
+</div>
+ 
+   
 <div class="rating-row">
-<div class="stars">
+ 
+      <div class="stars">
 <% for(let i = 1; i <= 5; i++) { %>
-<% if(i <= rating) { %>
+<% if(i <= safeRating) { %>
 <i class="fa-solid fa-star text-warning"></i>
 <% } else { %>
 <i class="fa-regular fa-star text-muted"></i>
@@ -155,114 +432,245 @@
 <% } %>
 </div>
  
-<div class="rating-number">
-<%= rating %> / 5
-</div>
+      <div class="rating-number">
+<%= safeRating %> / 5
 </div>
  
+    </div>
+ 
 <div class="rating-label">
-<% if(progressPercent >= 90) { %>
-        Outstanding Performance
-<% } else if(progressPercent >= 70) { %>
-        Strong Progress
-<% } else if(progressPercent >= 40) { %>
-        Developing
+<% if(safeProgress >= 100) { %>
+        Exceptional
+<% } else if(safeProgress >= 75) { %>
+       Exceeds Expectation
+<% } else if(safeProgress >= 50) { %>
+       Meets Expectation
+<% } else if(safeProgress >= 25) { %>
+       Needs Improvement
 <% } else { %>
-        Needs Improvement
+       Unsatisfactory
 <% } %>
 </div>
  
+   
 <div class="progress-label">
 <i class="fa-solid fa-chart-line"></i>
       Learning Goal Progress
 </div>
  
-    <div class="progress">
-<div 
-  class="progress-fill"
-  style="width: <%= typeof progressPercent !== 'undefined' ? progressPercent : 0 %>%;">
+
+<div class="progress">
+<div class="progress-fill"
+           style="width: <%= safeProgress %>%;">
 </div>
 </div>
  
-    <div class="progress-percent">
-<%= progressPercent %>%
+<div class="progress-percent">
+<%= safeProgress %>%
 </div>
  
-  </div>
+  </div> -->
+ 
 </div>
 
-<div id="main-section">  
-<section class="complaince-section">
-  <h2>Compliance Trainings</h2>
+<div id="main-section"> 
+  <div class="tabs" style="margin: 20px 0px;">
+    <button class="tab-btn active" data-tab="compliance">Compliance Trainings</button>
+    <% if (userDetails.jobstream && userDetails.jobstream.toUpperCase() === "TECH") { %>
+    <button class="tab-btn" data-tab="genai">Gen AI Curriculum</button>
+    <button class="tab-btn" data-tab="tsr">TSR With External Certification</button>
+  <% } %>
+    <button class="tab-btn" data-tab="ilt">ILT / VILT Sessions</button>
+  </div>
+
+  <!-- Tab Contents -->
+  <div id="compliance" class="tab-content" style="display:block;">
+    <!-- Compliance Trainings section as you have it -->
+     <section class="complaince-section">
+<h2><i class="fa-solid fa-shield-halved text-primary"></i> Compliance Trainings</h2>
+ 
   <div class="grid" id="compliance-grid">
-    <% if (complianceTrainings.length === 0) { %>
-      <p>No compliance trainings available.</p>
-    <% } else { %>
-      <% complianceTrainings.forEach(ct => {
+<% if (complianceTrainings.length === 0) { %>
+<p><i class="fa-regular fa-face-frown text-muted"></i> No compliance trainings available.</p>
+<% } else { %>
+<% complianceTrainings.forEach(ct => {
         const statusClass = ct.status.toLowerCase().replace(/\s/g, '-');
         if (['completed', 'in-progress'].includes(statusClass)) { %>
-          <a href="https://hexavarsity.csod.com/ui/lms-learning-details/app/curriculum/<%= ct.complianceId %>?isOnePlayer=true" target="_blank" class="card-link">
+ 
+          <a href="https://hexavarsity.csod.com/ui/lms-learning-details/app/curriculum/<%= ct.complianceId %>?isOnePlayer=true"
+             target="_blank"
+             class="card-link">
+ 
             <div class="card">
-              <h3><%= ct.complianceName %></h3>
-              <div class="ribbon <%= statusClass %>"><%= ct.status.toUpperCase() %></div>
-            </div>
+<h3>
+<i class="fa-solid fa-book-open text-info"></i>
+<%= ct.complianceName %>
+</h3>
+ 
+              <div class="ribbon <%= statusClass %>">
+<% if(statusClass === 'completed') { %>
+<i class="fa-solid fa-circle-check"></i>
+<% } else { %>
+<i class="fa-solid fa-spinner"></i>
+<% } %>
+<%= ct.status.toUpperCase() %>
+</div>
+</div>
+ 
           </a>
+ 
       <% } }); %>
-    <% } %>
-  </div>
+<% } %>
+</div>
 </section>
+  </div>
 
-<% if (userDetails.jobstream && userDetails.jobstream.toUpperCase() === "TECH") { %>
+  <div id="genai" class="tab-content" style="display:none;">
+    <!-- Gen AI Curriculum section (Tech only) -->
+     <% if (userDetails.jobstream && userDetails.jobstream.toUpperCase() === "TECH") { %>
+ 
 <section class="genai-section">
-  <h2>Gen AI Curriculum</h2>
-  <div class="grid" id="compliance-grid">
-    <% if (genaiTraining.length === 0) { %>
-      <p>No Gen AI trainings available.</p>
-    <% } else { %>
-      <% genaiTraining.forEach(ct => {
+<h2><i class="fa-solid fa-robot text-success"></i> Gen AI Curriculum</h2>
+  <div class="grid">
+<% if (genaiTraining.length === 0) { %>
+<p><i class="fa-regular fa-face-frown text-muted"></i> No Gen AI trainings available.</p>
+<% } else { %>
+<% genaiTraining.forEach(ct => {
         const statusClass = ct.status.toLowerCase().replace(/\s/g, '-');
         if (['completed', 'in-progress'].includes(statusClass)) { %>
-          <a href="https://hexavarsity.csod.com/ui/lms-learning-details/app/curriculum/<%= ct.complianceId %>?isOnePlayer=true" target="_blank" class="card-link">
+ 
+          <a href="https://hexavarsity.csod.com/ui/lms-learning-details/app/curriculum/<%= ct.complianceId %>?isOnePlayer=true"
+             target="_blank"
+             class="card-link">
+ 
             <div class="card">
-              <h3><%= ct.complianceName %></h3>
-              <div class="ribbon <%= statusClass %>"><%= ct.status.toUpperCase() %></div>
-            </div>
+<h3>
+<i class="fa-solid fa-brain text-warning"></i>
+<%= ct.complianceName %>
+</h3>
+ 
+              <div class="ribbon <%= statusClass %>">
+<% if(statusClass === 'completed') { %>
+<i class="fa-solid fa-circle-check"></i>
+<% } else { %>
+<i class="fa-solid fa-spinner"></i>
+<% } %>
+<%= ct.status.toUpperCase() %>
+</div>
+</div>
+ 
           </a>
+ 
       <% } }); %>
-    <% } %>
-  </div>
+<% } %>
+</div>
 </section>
+ <% } %>
+  </div>
 
-<section class="training-section" style="margin-bottom: 20px;">
-  <h2>TSR With External certification</h2>
-  <% if (!tsrData.certifications || tsrData.certifications.length === 0) { %>
-    <p>No certifications available.</p>
+  <div id="tsr" class="tab-content" style="display:none;">
+    <!-- TSR With External Certification section (Tech only) -->
+     
+<% if (userDetails.jobstream && userDetails.jobstream.toUpperCase() === "TECH") { %>
+ <section class="training-section" style="margin-bottom: 20px;">
+  <h2><i class="fa-solid fa-certificate text-danger"></i> TSR With External Certification</h2>
+
+  <% if (!tsrWithExternalCertification || tsrWithExternalCertification.length === 0) { %>
+    <p><i class="fa-regular fa-face-frown text-muted"></i> No certifications available.</p>
   <% } else { %>
-    <div class="grid" style="grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px;">
-      <% tsrData.certifications.forEach(cert => { 
-        const displayStatus = (cert.Status === "Registered") ? "In Progress" : cert.Status;
-        const statusClass = displayStatus.toLowerCase().replace(/\s/g, '-');
-      %>
-        <div class="cards-container" style="max-width: 350px; border-radius: 0;">
-          <h3 class="section-header" style="margin: 0;"><%= tsrData.tsrTitle %></h3>
-          <div class="card" style="position: relative; border-top-left-radius: 0; border-top-right-radius: 0;">
-            <h4 style="margin: 0 0 8px 0; line-height: 1.2;"><%= cert.Title %></h4>
-            <div class="ribbon <%= statusClass %>">
-              <%= displayStatus.toUpperCase() %>
-            </div>
-          </div>
-        </div>
-      <% }) %>
+
+    <div class="grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px;">
+
+      <% tsrWithExternalCertification.forEach(tsr => { %>
+        <% if (tsr.certifications && tsr.certifications.length > 0) { %>
+          <% tsr.certifications.forEach(cert => {
+            const displayStatus = (cert.Status === "Registered" || cert.Status === "In Progress")
+              ? "In Progress"
+              : cert.Status;
+            const statusClass = displayStatus.toLowerCase().replace(/\s/g, '-');
+          %>
+
+          <div class="card" style="padding: 0px;">
+            
+            <!-- TSR Title -->
+            <h3 style="display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 50px;
+    color: white;
+    margin: 0px;
+    background: rgb(7, 18, 94);">
+              <i class="fa-solid fa-award"></i> <%= tsr.tsrTitle %>
+            </h3>
+             <% if (tsr.isBase) { %>
+    <div style="
+      background-color: #007bff; /* Bootstrap primary blue or customize */
+      color: white;
+      font-weight: bold;
+      right: 0px;
+      position: absolute;
+      padding: 5px 12px;
+      box-shadow: 0 0 8px rgba(0,123,255,0.6);
+      font-size: 14px;
+    ">
+      Base TSR
     </div>
   <% } %>
+
+            <!-- Certification Title -->
+            <h3 style="padding-left: 22px;padding-top: 30px;min-height: 80px;">
+              <i class="fa-solid fa-medal"></i> <%= cert.Title %>
+            </h3>
+
+            <!-- Complexity Level -->
+            <div style="font-size: 0.9em; color: #666; margin-bottom: 8px;padding-left: 22px;">
+              <% if (cert.Complexity === 'Advanced') { %>
+                <!-- <i class="fa-solid fa-star text-danger" title="Advanced Level"></i> Advanced -->
+                 Complexity Level : Advanced
+              <% } else if (cert.Complexity === 'Basic') { %>
+                <!-- <i class="fa-solid fa-circle text-info" title="Basic Level"></i> Basic -->
+                 Complexity Level : Basic
+              <% } else { %>
+                Complexity Level : Unknown
+              <% } %>
+            </div>
+
+            <div style="padding: 0px 22px;padding-bottom: 22px;">
+            <!-- Status Ribbon -->
+            <div class="ribbon <%= statusClass %>" style="font-weight: bold;">
+              <% if (statusClass === 'completed') { %>
+                <i class="fa-solid fa-circle-check"></i>
+              <% } else { %>
+                <i class="fa-solid fa-spinner"></i>
+              <% } %>
+              <%= cert.Status.toUpperCase() %>
+            </div>
+            </div>
+          </div> <!-- card -->
+
+          <% }) %>
+        <% } else { %>
+          <!-- If no certifications for this TSR, show full width message -->
+          <!-- <div style="grid-column: 1 / -1; color: #888;">
+            <p><i class="fa-regular fa-face-frown"></i> No certifications available for <%= tsr.tsrTitle %>.</p>
+          </div> -->
+        <% } %>
+      <% }) %>
+    </div>
+
+  <% } %>
 </section>
-<% } %>
+ <% } %>
+  </div>
 
+  <div id="ilt" class="tab-content" style="display:none;">
+    <!-- ILT / VILT Sessions section -->
+     
 <section class="training-section">
+  <div style="display: flex;justify-content: space-between;align-items: center;">
   <h2>ILT/VILT Sessions</h2>
-
-  <p><strong>Total Training Hours Completed:</strong> <%= totalHours.toFixed(2) %> hrs</p>
-
+  <p style="margin: 0;"><strong>Total Training Hours Completed:</strong> <%= totalHours.toFixed(2) %> hrs</p>
+</div>
   <div class="session-list">
     <% 
       // Helper function to convert "HHHH:MM:SS" time string to decimal hours
@@ -288,38 +696,100 @@
              const statusClass = displayStatus.toLowerCase().replace(/\s/g, '-');
         %>
           <div class="session-item card" style="position: relative;">
-            <h3 style="margin: 0;"><%= session.Title %></h3>
-            <p>
-              <strong>Duration:</strong> <%= decimalHours %> hour<%= decimalHours !== 1 ? 's' : '' %> <br>
-              <strong>Start Date:</strong> <%= new Date(session.StartDateTime).toLocaleString('en-GB', {
-                day: '2-digit',
-                month: '2-digit',
-                year: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit',
-                hour12: true
-              }) %> <br>
-              <strong>End Date:</strong> <%= new Date(session.EndDateTime).toLocaleString('en-GB', {
-                day: '2-digit',
-                month: '2-digit',
-                year: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit',
-                hour12: true
-              }) %>
-            </p>
-            <div class="ribbon <%= statusClass %>">
-              <%= displayStatus.toUpperCase() %>
-            </div>
+          <h3>
+        <i class="fa-solid fa-laptop text-primary"></i>
+        <%= session.Title %>
+      </h3>
+      <p>
+        <i class="fa-solid fa-calendar-day text-success session-icon"></i>
+        <strong class="session-text">Start Date</strong><span>:</span> <%= session.StartDateTime    %>
+        <br>
+        <i class="fa-solid fa-calendar-check text-danger session-icon"></i>
+        <strong class="session-text">End Date</strong><span>:</span> <%= session.EndDateTime    %><br>
+          <i class="fa-solid fa-hourglass-half text-warning session-icon"></i>
+        <strong class="session-text">Duration</strong><span>:</span> <%= decimalHours %> hour<%= decimalHours !== 1 ? 's' : '' %> 
+      </p>
+      <div class="ribbon <%= statusClass %>">
+        <i class="fa-solid fa-circle-check"></i> <%= session.Status.toUpperCase() %>
+      </div>
+
           </div>
         <% }) %>
       </div>
     <% } %>
   </div>
 </section>
+  </div> 
+ 
+<!-- ===================== COMPLIANCE SECTION ===================== -->
 
+ 
+ 
+<!-- ===================== GEN AI SECTION (TECH ONLY) ===================== -->
+
+ 
+
+
+
+<!-- ===================== ILT / VILT SECTION ===================== -->
+<!-- <section class="training-section">
+<h2><i class="fa-solid fa-chalkboard-user text-secondary"></i> ILT / VILT Sessions</h2>
+ 
+  <p>
+<i class="fa-solid fa-clock text-info"></i>
+<strong>Total Training Hours Completed:</strong>
+<%= totalHours.toFixed(2) %> hrs
+</p>
+
+    
+  <div class="tabs" style="margin-bottom: 1rem;">
+  <% uniqueKeywords.forEach((keyword, idx) => { %>
+    <button class="tab-btn <%= idx === 0 ? 'active' : '' %>" data-tab="<%= keyword %>"><%= keyword %></button>
+  <% }) %>
+</div>
+
+<div class="session-list grid" style="margin-bottom: 40px;">
+  <% 
+      // Helper function to convert "HHHH:MM:SS" time string to decimal hours
+      function timeToDecimalHours(timeStr) {
+        if (!timeStr) return 0;
+        const parts = timeStr.split(':');
+        if (parts.length !== 3) return 0;
+        const hours = parseInt(parts[0], 10);
+        const minutes = parseInt(parts[1], 10);
+        const seconds = parseInt(parts[2], 10);
+        if (isNaN(hours) || isNaN(minutes) || isNaN(seconds)) return 0;
+        return hours + (minutes / 60) + (seconds / 3600);
+      }
+    %>
+  <% completedTrainings.forEach(session => { 
+       const keyword = session.keyword;
+       const decimalHours = timeToDecimalHours(session.TrainingHours);
+       const displayStatus = (session.Status === "Registered") ? "In Progress" : session.Status;
+       const statusClass = displayStatus.toLowerCase().replace(/\s/g, '-');
+  %>
+    <div class="session-item card" data-tab="<%= keyword %>" style="<%= keyword === uniqueKeywords[0] ? '' : 'display:none' %>">
+      <h3>
+        <i class="fa-solid fa-laptop text-primary"></i>
+        <%= session.Title %>
+      </h3>
+      <p>
+        <i class="fa-solid fa-calendar-day text-success session-icon"></i>
+        <strong class="session-text">Start Date</strong><span>:</span> <%= session.StartDateTime    %>
+        <br>
+        <i class="fa-solid fa-calendar-check text-danger session-icon"></i>
+        <strong class="session-text">End Date</strong><span>:</span> <%= session.EndDateTime    %><br>
+          <i class="fa-solid fa-hourglass-half text-warning session-icon"></i>
+        <strong class="session-text">Duration</strong><span>:</span> <%= decimalHours %> hour<%= decimalHours !== 1 ? 's' : '' %> 
+      </p>
+      <div class="ribbon <%= statusClass %>">
+        <i class="fa-solid fa-circle-check"></i> <%= session.Status.toUpperCase() %>
+      </div>
+    </div>
+  <% }) %>
+</div>
+</section> -->
+ 
 </div>
 
 </div>

@@ -33,6 +33,7 @@ app.get('/oauth/callback', async (req, res) => {
       accessToken = parsed.accessToken;
       console.log("Using cached access token",accessToken);
     } else {
+      console.log("New access token");
       const tokenResponse = await axios.post(
         `${process.env.BASE_URL}/services/api/oauth2/token`,
         {
@@ -49,9 +50,9 @@ app.get('/oauth/callback', async (req, res) => {
           }
         }
       );
- 
+ console.log("tokenResponse",tokenResponse)
       accessToken = tokenResponse.data.access_token;
-      console.log(accessToken,accessToken)
+      console.log("accessToken",accessToken)
       await redis.set(
         sessionId,
         JSON.stringify({ accessToken, state }),
@@ -85,18 +86,10 @@ app.get('/oauth/callback', async (req, res) => {
       ? getJOBSTREAM(customField144.value)
       : null;
     
-// const jobstream = "TECH"
+    // const jobstream = "TECH"
 
 
-    const userDetails = {
-      firstName: employee.data.data.firstName,
-      lastName: employee.data.data.lastName,
-      email: employee.data.data.userName,
-      softwareLevel: getCustomField(145),
-      designation: getCustomField(160),
-      grade:gradeTitle,
-      jobstream:jobstream   
-    };  
+  
  
     console.log("Grade:", gradeTitle);
     console.log("Jobstream:", jobstream);
@@ -114,89 +107,154 @@ app.get('/oauth/callback', async (req, res) => {
     }
  
     // const gradeNumber = 3;
+      const userDetails = {
+      firstName: employee.data.data.firstName,
+      lastName: employee.data.data.lastName,
+      email: employee.data.data.userName,
+      softwareLevel: getCustomField(145),
+      designation: getCustomField(160),
+      baseTsrCode:getCustomField(1160),
+      grade:gradeNumber,
+      jobstream:jobstream   
+    };  
 
     const transcriptData = await fetchTranscript(employee, accessToken);
     const transcripts = transcriptData.data.data[0]?.Transcripts || [];
     const ComplianceReport = checkComplianceById(transcripts);
+    const complianceCompletionCount = ComplianceReport.filter(compliance => compliance.status === "Completed").length;
     const totalTrainingHours = getCompletedSessionsWithTotalHours(transcripts);
 
     let GenAiReport = [];
     let tsrWithExternalCertification = [];
 
+    // const learningHours = totalTrainingHours.totalHours
+    const learningHours = 10
 
     const complainceCompletion = ComplianceReport.every(course => course.status === "Completed");
-    const genaiCompletion = GenAiReport.some(course => course.status === "Completed");
-    const learningHoursCompletion = totalTrainingHours.totalHours >= 20
-
+    const tenHourslearningCompletion = learningHours >= 10
+    const fiftteenHourslearningCompletion = learningHours >= 15
+    const twentyHourslearningCompletion = learningHours >= 20 
+    let completedAndAdvancedCount = 0
+    let genaiCompletion = false
     let rating
     let progressPercent 
-    
+    let genAiCompletionCount = 0
  
     if (gradeNumber && gradeNumber >= 2 && gradeNumber <= 6 && jobstream === "TECH") {
-      GenAiReport = checkGenAiCompliance(transcripts);
-      tsrWithExternalCertification =
-        fetchRootTitleAndTestLearningObjects(transcripts);
+      GenAiReport = checkGenAiById(transcripts);
+      genAiCompletionCount = GenAiReport.filter(genai => genai.status === "Completed").length;
+      const tsrWithExternalCertificationDynamic = fetchRootTitleAndTestLearningObjects(transcripts,userDetails.baseTsrCode)
+      
+      if(tsrWithExternalCertificationDynamic && tsrWithExternalCertificationDynamic.length ){
+        tsrWithExternalCertificationDynamic.forEach((tsr)=>tsrWithExternalCertification.push(tsr))
+      }
+//       const mockCertification = [
+//   {
+//   tsrTitle: 'Back End Developer',
+//   tsrId: 'abc123',
+//   LoProviderId:'S2.0_ATM_AFD',
+//   certifications: [
+//     {
+//       DueDate: null,
+//       ItemSequence: 1,
+//       LoId: 'xyz789',
+//       LoTrainingHours: '0080:00:00',
+//       LoType: 'Test',
+//       ParentLoId: 'parent123',
+//       Status: 'Completed',
+//       Title: 'AWS Solutions Architect',
+//       Complexity: 'Advanced'
+//     }
+//   ]},
+//   {
+//   tsrTitle: 'Front End Developer',
+//   tsrId: 'abc123',
+//   LoProviderId:'130518_S2.0_CXT_DXD',
+//   certifications: [
+//     {
+//       DueDate: null,
+//       ItemSequence: 1,
+//       LoId: 'xyz789',
+//       LoTrainingHours: '0080:00:00',
+//       LoType: 'Test',
+//       ParentLoId: 'parent123',
+//       Status: 'Completed',
+//       Title: 'AWS Solutions Developer',
+//       Complexity: 'Advanced'
+//     }
+//   ]}
+// ]
+// mockCertification.forEach((tsr)=>tsrWithExternalCertification.push(tsr))
 
-        if(complainceCompletion){
-      rating = 2
-      progressPercent = 25  
-    }
-    else if(complainceCompletion && genaiCompletion){
-      rating = 3
-      progressPercent = 50  
-    } 
-    else if(complainceCompletion && genaiCompletion && learningHoursCompletion){
-      rating = 4
-      progressPercent = 75  
+
+    genaiCompletion = GenAiReport.some(course => course.status === "Completed");
+    completedAndAdvancedCount = tsrWithExternalCertification.reduce((total, tsr) => {
+      const count = tsr.certifications.filter(cert => cert.Status === 'Completed' && cert.Complexity === 'Advanced').length;
+      return total + count;
+    }, 0);
+      if(complainceCompletion && twentyHourslearningCompletion && genaiCompletion && completedAndAdvancedCount > 1){
+        rating = 5
+        progressPercent = 100 
+      }
+      else if(complainceCompletion && fiftteenHourslearningCompletion && genaiCompletion && completedAndAdvancedCount > 0){
+        rating = 4
+        progressPercent = 80  
+      } 
+      else if(complainceCompletion && tenHourslearningCompletion  && completedAndAdvancedCount > 0){
+        rating = 3
+        progressPercent = 60 
+      }
+      else if(complainceCompletion || tenHourslearningCompletion || completedAndAdvancedCount > 0 || genaiCompletion){
+       rating = 2
+       progressPercent = 40
+      }
+      else{
+        rating = 1 
+        progressPercent = 0 
+      }
     }
     else{
-      rating = 1 
-      progressPercent = 0 
+      if(complainceCompletion && twentyHourslearningCompletion){
+        rating = 5
+        progressPercent = 100
+      }
+      else if(complainceCompletion && fiftteenHourslearningCompletion){
+        rating = 4
+        progressPercent = 75  
+      } 
+      else if(complainceCompletion && tenHourslearningCompletion){
+        rating = 3
+        progressPercent = 50 
+      }
+      else if(complainceCompletion || tenHourslearningCompletion){
+        rating = 2
+        progressPercent = 25
+      }
+      else{
+        rating = 1 
+        progressPercent = 0 
+      }
     }
 
-    }
-    else{
-
-      if(complainceCompletion){
-      rating = 2
-      progressPercent = 25  
-    }
-    else if(complainceCompletion){
-      rating = 3
-      progressPercent = 50  
-    } 
-    else if(complainceCompletion && learningHoursCompletion){
-      rating = 4
-      progressPercent = 75  
-    }
-    else{
-      rating = 1 
-      progressPercent = 0 
-    }
-    
-    }
-//  const completedGoals = goalsForYear.filter(g => g.isCompleted).length;
-// const totalGoals = goalsForYear.length;
- 
-
-
-
-// const completedGoals =8;
-// const totalGoals = 10;
-// let progressPercent = 0;
- 
-// if (totalGoals > 0) {
-//   progressPercent = Math.round((completedGoals / totalGoals) * 100);
-// }
+ console.log("rating",rating,progressPercent)
+console.log("completedAndAdvancedCount",completedAndAdvancedCount)
 const progress = {
   complianceCompleted: complainceCompletion,
-  baseTSRCount:0,
+  baseTSRCount:completedAndAdvancedCount,
   genAICertCount:genaiCompletion,
-  anyTSRCount:0,
-  inPersonHours: totalTrainingHours.totalHours,
+  anyTSRCount:completedAndAdvancedCount,
+  inPersonHours: learningHours,
 }
-    const goalsForYear = buildGoals2026({progress},{user:{category:jobstream}})
-    // console.log(goalsForYear)
+const completionCount = {
+  complaince:complianceCompletionCount,
+  genai:genAiCompletionCount,
+  advancedCertificateCount:completedAndAdvancedCount,
+  inPersonHours:learningHours,
+}
+console.log("progress",progress)
+
+    const goalsForYear = buildGoals2026({progress},{user:{category:jobstream}},completionCount)
+    console.log("goalsForYear",goalsForYear)
     return res.render("dashboard", {
       userInfo,
       userDetails,
@@ -207,7 +265,8 @@ const progress = {
       genaiTraining: GenAiReport,
       totalHours: totalTrainingHours.totalHours,
       completedTrainings: totalTrainingHours.completedTrainings,
-      tsrData: tsrWithExternalCertification,
+      uniqueKeywords:totalTrainingHours.uniqueKeywords,
+      tsrWithExternalCertification: tsrWithExternalCertification,
       grade: gradeTitle,
       jobstream
     });
@@ -219,6 +278,7 @@ const progress = {
 } else if (error.request) {
   console.error("No response received:", error. Request);
 }
+console.log(error)
     return res.status(500).send(
       "OAuth token exchange or data retrieval failed"
     );
@@ -268,17 +328,21 @@ const requiredCourses = [
   { id: "48fa0468-9136-4f71-8532-b4b2ea30ae2b", name: "Unconscious Bias - 2026" }
 ];
 
-function buildGoals2026(progress, user) {
-  console.log(user)
+function buildGoals2026(progress, user,completion) {
+  console.log("completion",completion)
   if (user.user.category !== "TECH") {
     return [
       {
         title: '100% of all compliance courses',
-        isCompleted: progress.progress.complianceCompleted
+        isCompleted: progress.progress.complianceCompleted,
+        count:8,
+        completion: Math.min(completion.complaince,8),
       },
       {
         title: '20 hours of in-person learning',
-        isCompleted: progress.progress.inPersonHours >= 20
+        isCompleted: progress.progress.inPersonHours >= 20,
+        count:20,
+        completion: Math.min(progress.progress.inPersonHours,20),
       }
     ];
   }
@@ -287,23 +351,33 @@ function buildGoals2026(progress, user) {
   return [
     {
       title: '100% of all compliance courses',
-      isCompleted: progress.progress.complianceCompleted
+      isCompleted: progress.progress.complianceCompleted,
+      count:8,
+      completion: Math.min(completion.complaince,8),
     },
     {
       title: 'One advanced External Certification(Base TSR)',
-      isCompleted: progress.progress.baseTSRCount >= 1
+      isCompleted: progress.progress.baseTSRCount > 0,
+      count:1,
+      completion: Math.min(progress.progress.baseTSRCount, 1)
     },
     {
       title: 'One Gen AI external certification / Gen AI Honors',
-      isCompleted: progress.progress.genAICertCount
+      isCompleted: progress.progress.genAICertCount,
+      count:1,
+      completion: Math.min(completion.genai,1),
     },
     {
       title: 'One advanced External Certification(Any TSR)',
-      isCompleted: progress.progress.anyTSRCount >= 1
+      isCompleted: progress.progress.anyTSRCount > 1,
+      count:1,
+      completion: Math.min(progress.progress.anyTSRCount,1)
     },
     {
       title: '20 hours of in-person learning',
-      isCompleted: progress.progress.inPersonHours >= 20
+      isCompleted: progress.progress.inPersonHours >= 20,
+      count:20,
+      completion: Math.min(progress.progress.inPersonHours,20)
     }
   ];
 }
@@ -313,13 +387,13 @@ function checkComplianceById(transcriptCourses) {
   
   return requiredCourses.map(course => {
     const courseRecord = transcriptCourses.find(c => c.LoId === course.id);
-    let status = 'In-Progress';
+    let status = 'Completed';
 
     if (courseRecord) {
       if (courseRecord.Status === 'Completed') {
         status = 'Completed';
       } else if (courseRecord.Status === 'In Progress') {
-        status = 'In-Progress';
+        status = 'Completed';
       }
     }
 
@@ -336,15 +410,15 @@ const genAiCourses = [
   { id: "96ae3787-694f-435a-9dca-73870890c6dc", name: "AI/Gen AI Honors" }
 ];
 
-function checkGenAiCompliance(transcriptCourses) {
+function checkGenAiById(transcriptCourses) {
   return genAiCourses.map(course => {
     const courseRecord = transcriptCourses.find(c => c.LoId === course.id);
-    let status = 'In Progress';
+    let status = 'Completed';
     if (courseRecord) {
       if (courseRecord.Status === 'Completed') {
         status = 'Completed';
       } else if (courseRecord.Status === 'In Progress') {
-        status = 'In-Progress';
+        status = 'Completed';
       }
     }
 
@@ -356,12 +430,38 @@ function checkGenAiCompliance(transcriptCourses) {
   });
 }
 
-function getCompletedSessionsWithTotalHours(transcriptItems) {
+function extractKeyword(loProviderId) {
+  if (!loProviderId || typeof loProviderId !== 'string') return 'Other';
+
+  const parts = loProviderId.split('_').map(p => p.toUpperCase()); // Normalize case for search
+
+  // Find index of part containing 'ILT' or 'VILT'
+  const iltIndex = parts.findIndex(part => part.includes('ILT') || part.includes('VILT'));
+
+  // If found and next element exists, return next element
+  if (iltIndex !== -1 && iltIndex + 1 < parts.length) {
+    return parts[iltIndex + 1];
+  }
+
+  // If ILT/VILT not found, classify as 'Other'
+  return 'Other';
+}
+
+function getCompletedSessionsWithTotalHours(transcriptItems,excludeStrings = ['BQ']) {
   let totalMinutes = 0;
   const completedTrainings = [];
 
   transcriptItems.forEach(item => {
     if (item.Status === 'Completed' && item.LoType === 'Session' && item.TrainingHours) {
+      
+      
+      const containsExcluded = excludeStrings.some(excludeStr =>
+        item.LoProviderId.includes(excludeStr)
+      );
+
+      if (containsExcluded) {
+        return;
+      }
       const parts = item.TrainingHours.split(':');
       if (parts.length === 3) {
         const hours = parseInt(parts[0], 10);
@@ -372,21 +472,52 @@ function getCompletedSessionsWithTotalHours(transcriptItems) {
           LoId: item.LoId,
           Title: item.Title,
           TrainingHours: item.TrainingHours,
-          StartDateTime: item.StartDateTime,
-          EndDateTime: item.EndDateTime,
-          Status:item.Status
+          StartDateTime: formatISODateTimeCombined(item.StartDateTime),
+          EndDateTime: formatISODateTimeCombined(item.EndDateTime),
+          Status: item.Status,
+          LoProviderId: item.LoProviderId,
+          keyword: extractKeyword(item.LoProviderId)
         });
       }
     }
   });
 
+  const uniqueKeywordsSet = new Set(completedTrainings.map(t => t.keyword));
+  const uniqueKeywords = Array.from(uniqueKeywordsSet);
+
   const totalHours = totalMinutes / 60;
 
   return {
     totalHours,
-    completedTrainings
+    completedTrainings,
+    uniqueKeywords
   };
 }
+
+function formatISODateTimeCombined(isoString) {
+  // Fix timezone format to ISO standard (add colon in timezone)
+  const fixedIso = isoString.replace(/([+\-]\d{2})(\d{2})\$/, "\$1:\$2");
+  const date = new Date(fixedIso);
+
+  function getOrdinal(n) {
+    const s = ["th", "st", "nd", "rd"],
+          v = n % 100;
+    return s[(v - 20) % 10] || s[v] || s[0];
+  }
+
+  const day = date.getDate();
+  const ordinal = getOrdinal(day);
+  const month = date.toLocaleString('en-GB', { month: 'short' });
+  const year = date.getFullYear();
+
+  let hours = date.getHours();
+  const minutes = date.getMinutes().toString().padStart(2, '0');
+  const ampm = hours >= 12 ? 'pm' : 'am';
+  hours = hours % 12 || 12;
+
+  return `${day}${ordinal}-${month}-${year} ${hours}:${minutes} ${ampm}`;
+}
+
 // function calculateCompletedSessionTrainingHours(transcriptItems) {
 //   let totalMinutes = 0;
 //   transcriptItems.forEach(item => {
@@ -453,34 +584,58 @@ async function fetchEmployeeAndTranscript(employeeId, bearerToken) {
     // throw error;
   }
 }
-function fetchRootTitleAndTestLearningObjects(transcripts) {
-  console.log(transcripts)
-  const rootCurriculum = transcripts.find(item => 
+function fetchRootTitleAndTestLearningObjects(transcripts, baseTsr) {
+  // Filter all matching root curricula
+  const rootCurricula = transcripts.filter(item => 
     item.LoType === "Curriculum" &&
     item.ProviderName === "Hexavarsity Online" &&
     item.LoProviderId &&
     /_sn?2\.0_/i.test(item.LoProviderId)
   );
 
-  if (!rootCurriculum) {
+  if (rootCurricula.length === 0) {
     return null; 
   }
 
-  const tsrTitle = rootCurriculum.Title;
-  const tsrId = rootCurriculum.LoId;
+  // Map each root curriculum to an object with required info
+  const results = rootCurricula.map(rootCurriculum => {
+    const tsrTitle = rootCurriculum.Title;
+    const tsrId = rootCurriculum.LoId;
+    const LoProviderId = rootCurriculum.LoProviderId;
 
-  // Filter LearningObjects to include only those with LoType "Test"
-const filteredTests = (rootCurriculum.LearningObjects || []).filter(
-  (lo) => lo.LoType === "Test" && (lo.Status === "Registered" || lo.Status === "Completed")
-);
+    const filteredTests = (rootCurriculum.LearningObjects || [])
+      .filter(
+        lo => lo.LoType === "Test" && 
+          (lo.Status === "Registered" || lo.Status === "In Progress" || lo.Status === "Completed")
+      )
+      .map(lo => {
+        const trainingHoursStr = lo.LoTrainingHours ? lo.LoTrainingHours.substring(0, 4) : "0000";
+        const trainingHours = parseInt(trainingHoursStr, 10) || 0;
 
-  return {
-    tsrTitle,
-    tsrId,
-    certifications: filteredTests,
-  };
+        let level = null;
+        if (trainingHours >= 150) {
+          level = "Advanced";
+        } else if (trainingHours >= 40) {
+          level = "Basic";
+        }
+
+        return {
+          ...lo,
+          Complexity: level,
+        };
+      });
+
+    return {
+      tsrTitle,
+      tsrId,
+      LoProviderId,
+      isBase: baseTsr ? LoProviderId.includes(baseTsr) : false,
+      certifications: filteredTests,
+    };
+  });
+
+  return results;
 }
-
 
 
 app.listen(port, () => {
