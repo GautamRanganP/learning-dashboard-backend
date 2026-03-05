@@ -50,7 +50,7 @@ app.get('/oauth/callback', async (req, res) => {
           }
         }
       );
- console.log("tokenResponse",tokenResponse)
+  console.log("tokenResponse",tokenResponse)
       accessToken = tokenResponse.data.access_token;
       console.log("accessToken",accessToken)
       await redis.set(
@@ -127,8 +127,9 @@ app.get('/oauth/callback', async (req, res) => {
     let GenAiReport = [];
     let tsrWithExternalCertification = [];
 
-    // const learningHours = totalTrainingHours.totalHours
-    const learningHours = 10
+    const learningHours = totalTrainingHours.totalHours
+    
+    // const learningHours = 10
 
     const complainceCompletion = ComplianceReport.every(course => course.status === "Completed");
     const tenHourslearningCompletion = learningHours >= 10
