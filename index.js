@@ -388,13 +388,13 @@ function checkComplianceById(transcriptCourses) {
   
   return requiredCourses.map(course => {
     const courseRecord = transcriptCourses.find(c => c.LoId === course.id);
-    let status = 'Completed';
+    let status = 'In Progress';
 
     if (courseRecord) {
       if (courseRecord.Status === 'Completed') {
         status = 'Completed';
       } else if (courseRecord.Status === 'In Progress') {
-        status = 'Completed';
+        status = 'In Progress';
       }
     }
 
@@ -414,12 +414,12 @@ const genAiCourses = [
 function checkGenAiById(transcriptCourses) {
   return genAiCourses.map(course => {
     const courseRecord = transcriptCourses.find(c => c.LoId === course.id);
-    let status = 'Completed';
+    let status = 'In Progress';
     if (courseRecord) {
       if (courseRecord.Status === 'Completed') {
         status = 'Completed';
       } else if (courseRecord.Status === 'In Progress') {
-        status = 'Completed';
+        status = 'In Progress';
       }
     }
 
