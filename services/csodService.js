@@ -19,7 +19,7 @@ function fetchEmployee(userId, accessToken) {
  
 function fetchTranscript(employee, accessToken) {
   return axios.get(
-    `${process.env.BASE_URL}/services/api/TranscriptAndTask/Transcript?userId=${employee.data.data.externalId}`,
+    `${process.env.BASE_URL}/services/api/TranscriptAndTask/Transcript?userId=${employee.data.data.externalId}&startDate=2026-01-01`,
     {
       headers: {
         Authorization: `Bearer ${accessToken}`,
