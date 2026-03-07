@@ -326,7 +326,7 @@ const requiredCourses = [
   { id: "89d1b977-39bc-4c32-90cf-f25746638afc", name: "Prevention of Sexual Harassment - 2026" },
   { id: "4336265c-e52d-4d81-b2f4-8bea35e633b7", name: "Code of Conduct - 2026" },
   { id: "b0549801-1534-4100-84dc-f1a94315a287", name: "Social Media Policy - 2026" },
-  { id: "48fa0468-9136-4f71-8532-b4b2ea30ae2b", name: "Unconscious Bias - 2026" }
+  { id: "48fa0468-9136-4f71-8532-b4b2ea30ae2f", name: "Unconscious Bias - 2026" }
 ];
 
 function buildGoals2026(progress, user,completion) {
